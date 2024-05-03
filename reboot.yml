@@ -1,0 +1,7 @@
+name: Reboot
+become: true
+
+tasks:
+  - name: Ensure system is rebooted
+    ansible.builtin.reboot:
+      msg: Rebooting due to monitoring request
