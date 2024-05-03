@@ -1,4 +1,5 @@
 name: Reboot
+hosts: All
 become: true
 
 tasks:
