@@ -12,8 +12,8 @@
         group: root  # Optional: Sets the group of the file
     - name: Copy the file to the target host in tmp dir
       copy:
-        src: demo1.sh
-        dest: /tmp/demo.sh
+        src: demo{{app_ver}}.sh
+        dest: /tmp/demo{{app_ver}}.sh
         mode: '0755'  # This sets the file to be executable
         owner: root  # Optional: Sets the owner of the file
         group: root  # Optional: Sets the group of the file
