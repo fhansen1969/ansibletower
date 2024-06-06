@@ -1,19 +1,14 @@
----
 - name: Copy a file from Ansible server and make it executable on the host
   hosts: all
   become: yes  # This will use root privileges on the target hosts
   tasks:
-    - name: Copy the file to the target host
+    - name: Copy the file to multiple locations and make it executable
       copy:
         src: demo.sh
-        dest: /home/demo.sh
+        dest: "{{ item }}"
         mode: '0755'  # This sets the file to be executable
         owner: root  # Optional: Sets the owner of the file
         group: root  # Optional: Sets the group of the file
-    - name: Copy the file to the target host in tmp dir
-      copy:
-        src: demo.sh
-        dest: /tmp/demo.sh
-        mode: '0755'  # This sets the file to be executable
-        owner: root  # Optional: Sets the owner of the file
-        group: root  # Optional: Sets the group of the file
+      with_items:
+        - /home/demo.sh
+        - /tmp/demo.sh
