@@ -1,3 +1,4 @@
+---
 - name: Copy a file from Ansible server and make it executable on the host
   hosts: all
   become: yes  # This will use root privileges on the target hosts
