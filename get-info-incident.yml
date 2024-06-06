@@ -1,0 +1,23 @@
+---
+- name: Automate SNOW 
+  hosts: localhost
+  connection: local
+  collections:
+    - servicenow.itsm
+
+  tasks:
+
+    # Always give your tasks a useful name
+    - name: Retrieve info for an incident
+
+      servicenow.itsm.incident_info:
+        number: "{{ SNOW_INC_NUMBER }}"
+        instance:
+          host: "{{ SNOW_HOST }}"
+          username: "{{ SNOW_USER }}"
+          password: "{{ SNOW_PASS }}"
+      register: result
+
+    - debug:
+        var: result
+        verbosity: 2

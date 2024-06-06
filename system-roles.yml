@@ -1,0 +1,16 @@
+---
+- name: example system roles playbook
+  hosts: web
+
+  tasks:
+
+    - name: Configure Timesync
+      vars:
+        timesync_ntp_servers:
+          - hostname: time.ien.it
+            iburst: yes
+      include_role:
+        name: rhel-system-roles.timesync
+
+
+
