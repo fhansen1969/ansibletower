@@ -5,7 +5,7 @@
   tasks:
     - name: Copy the file to the target host
       copy:
-        src: src/v{{app_ver}}app.sh #We add version dynamically
+        src: src/v{{ app_ver }}_app.sh #We add version dynamically
         dest: "{{ file_path }}"
         mode: '0755'  # This sets the file to be executable
         owner: root  # Optional: Sets the owner of the file
