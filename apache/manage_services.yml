@@ -1,0 +1,37 @@
+---
+name: Manage services
+hosts: "{{ monitoring | mandatory }}"
+gather_facts: true
+become: false
+
+vars:
+
+  my_services:
+    - http
+    - https
+
+  my_content: |
+    Hello from {{ inventory_hostname }}
+
+    This content is served by {{ my_package }}
+
+tasks:
+
+  - name: Ensure needed variables are defined
+    tags:
+      - always
+    ansible.builtin.assert:
+      that:
+        - my_package is defined
+        - (my_package == "httpd") or (my_package == "nginx" )
+      success_msg: |
+      
+        The needed variables are set, proceeding
+
+      fail_msg: |
+        We need to set my_package to eitehr httpd or nginx
+        
+    - name: Ensure webserver is setup
+      become: true
+      tags:
+        - install
