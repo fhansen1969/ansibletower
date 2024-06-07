@@ -5,33 +5,33 @@
   become_user: root
 
   tasks:
-  - name: Gather facts about the system
-    hosts: all
-    gather_facts: yes
-    tasks:
-      - name: Print the distribution
-        debug:
-          msg: "This system is running {{ ansible_distribution }}"
+    - name: Gather facts about the system
+      hosts: all
+      gather_facts: yes
+      tasks:
+        - name: Print the distribution
+          debug:
+            msg: "This system is running {{ ansible_distribution }}"
         
-  - name: Check for updates
-    debug:
-      msg: "Checking for updates!"
-    yum:
-      update_cache: yes  # For RHEL/CentOS
-
-  - name: Install available updates
-    yum:
-      name: '*'
+    - name: Check for updates
       debug:
-        msg: "Installing available updates!"
-      state: latest  # For RHEL/CentOS
-      security: yes
-      exclude: kernel*
+        msg: "Checking for updates!"
+      yum:
+        update_cache: yes  # For RHEL/CentOS
 
-  - name: Reboot required check (distribution specific)
-    debug:
-      msg: "Rebooting after updats!"
-    #command: rpm -qa --last | grep kernel  # For RHEL/CentOS
-    command: needs-restarting -r
-    register: reboot_required  # Capture output in a variable
-    when: ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS'
+    - name: Install available updates
+      yum:
+        name: '*'
+        debug:
+          msg: "Installing available updates!"
+        state: latest  # For RHEL/CentOS
+        security: yes
+        exclude: kernel*
+
+    - name: Reboot required check (distribution specific)
+      debug:
+        msg: "Rebooting after updats!"
+      #command: rpm -qa --last | grep kernel  # For RHEL/CentOS
+      command: needs-restarting -r
+      register: reboot_required  # Capture output in a variable
+      when: ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS'
