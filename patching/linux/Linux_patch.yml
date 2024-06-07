@@ -1,0 +1,23 @@
+---
+- name: Linux Patching
+  hosts: all
+  become: yes
+  become_user: root
+
+  tasks:
+  - name: Check for updates
+    yum:
+      update_cache: yes  # For RHEL/CentOS
+
+  - name: Install available updates
+    yum:
+      name: '*'
+      state: latest  # For RHEL/CentOS
+      security: yes
+      exclude: kernel*
+
+  - name: Reboot required check (distribution specific)
+    #command: rpm -qa --last | grep kernel  # For RHEL/CentOS
+    command: needs-restarting -r
+    register: reboot_required  # Capture output in a variable
+    when: ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS'
