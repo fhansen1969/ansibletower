@@ -5,6 +5,14 @@
   become_user: root
 
   tasks:
+  - name: Gather facts about the system
+    hosts: all
+    gather_facts: yes
+    tasks:
+      - name: Print the distribution
+        debug:
+          msg: "This system is running {{ ansible_distribution }}"
+        
   - name: Check for updates
     debug:
       msg: "Checking for updates!"
