@@ -1,0 +1,40 @@
+---
+- name: show version cli command playbook
+  hosts: all
+  gather_facts: no
+  vars:
+    ansible_connection: network_cli
+
+  tasks:
+    - name: show version command
+      cli_command:
+        command: "show version"
+      when: ansible_network_os is defined
+      register: output
+   
+    - name: get IOS XE version
+      cli_command:
+        command: "show version | include Cisco IOS XE Software"
+      when: ansible_network_os is defined
+      register: iosxe_version
+
+    - name: get device uptime
+      cli_command:
+        command: "show version | include uptime"
+      when: ansible_network_os is defined
+      register: uptime
+
+    - name: Update incident
+      servicenow.itsm.incident:
+        number: "{{ SNOW_INC_NUMBER }}"
+        instance:
+          host: "{{ SNOW_HOST }}"
+          username: "{{ SNOW_USER }}"
+          password: "{{ SNOW_PASS }}"
+          timeout: "{{ SNOW_TIMEOUT }}"
+        state: in_progress
+        other: 
+          comments: "Ansible Automation Platform extracted data from {{ ansible_host }}\n\nIOS XE version is: {{ iosxe_version.stdout }}\n\nDevice uptime is: {{ uptime.stdout }}\n\n Full output of 'show version' command:\n\n{{ output.stdout }}"
+
+#    - debug:
+#        msg: "{{ output.stdout_lines }}"
