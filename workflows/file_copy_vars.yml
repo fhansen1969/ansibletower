@@ -1,12 +1,27 @@
 ---
 - name: Copy a file from Ansible server and make it executable on the host
   hosts: all
-  become: yes  # This will use root privileges on the target hosts
+  become: yes
+  vars:
+    source_file: /tmp/src/v{{ app_ver }}app.sh
   tasks:
-    - name: Copy the file to the target host
+    - name: Debug source file variable
+      debug:
+        msg: "Source file is set to {{ source_file }}"
+
+    - name: Debug destination file variable
+      debug:
+        msg: "Destination file is set to {{ file_path }}"
+
+    - name: Copy file from source to destination
       copy:
-        src: "src/v{{ app_ver }}app.sh" #We add version dynamically
+        src: "{{ source_file }}"
         dest: "{{ file_path }}"
         mode: '0755'  # This sets the file to be executable
         owner: root  # Optional: Sets the owner of the file
         group: root  # Optional: Sets the group of the file
+      register: copy_result
+
+    - name: Debug copy result
+      debug:
+        var: copy_result
